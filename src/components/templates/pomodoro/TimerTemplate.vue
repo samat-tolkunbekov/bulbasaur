@@ -33,20 +33,12 @@ export default {
     },
     methods: {
         startTimer () {
-            console.log('Inner timer start');
-
-            if (this.isTimerActive) {
-                this.start = 'Start';
-                this.isTimerActive = false;
-
-                return clearInterval(this.timer);
-            }
+            console.log('START');
 
             const targetTime = 25 * 60 * 1000 + 1000;
             const targetDate = new Date(new Date().getTime() + targetTime).getTime();
 
             this.isTimerActive = true;
-            this.start = 'Pause';
             this.timer = setInterval(() => {
                 const now = new Date().getTime();
                 
@@ -55,23 +47,39 @@ export default {
                 const minutes = Math.floor((this.distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((this.distance % (1000 * 60)) / 1000);
 
-                if (this.time < 0) {
-                    this.isTimerActive = false;
-
-                    clearInterval(this.timer);
+                if (this.distance < 1000) {
+                    this.storeTimer();
+                    this.resetTimer();
                 }
 
-                this.time = minutes + ':' + seconds;
+                this.updateTimer(minutes, seconds);
             }, 1000);
         },
 
+        updateTimer (minutes, seconds) {
+            this.time = (minutes < 10 ? '0' + minutes : minutes) +
+                    ':' + (seconds < 10 ? '0' + seconds : seconds);
+        },
+
         resetTimer () {
-            console.log('Inner timer reset');
+            console.log('RESET');
 
             this.time = '25:00';
             this.isTimerActive = false;
             
             clearInterval(this.timer);
+        },
+
+        storeTimer() {
+            const exact_date = new Date().toISOString();
+            const data = {
+                exact_date,
+                date: exact_date.split('T'),
+                count: 1
+            };
+
+            console.log('STORE');
+            console.log(data);
         },
     }
 }
