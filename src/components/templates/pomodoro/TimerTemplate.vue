@@ -20,7 +20,8 @@ export default {
             time: 0,
             distance: 0,
             timer: null,
-            isTimerActive: null
+            isTimerActive: null,
+            isTimerPassive: null
         }
     },
     created () {
@@ -29,16 +30,20 @@ export default {
         this.reset = 'Reset';
         this.time = '25:00';
         this.distance = 0;
-        this.isTimerActive = false;
     },
     methods: {
         startTimer () {
+            if (this.isTimerActive) {
+                return;
+            }
+
             console.log('START');
 
             const targetTime = 25 * 60 * 1000 + 1000;
             const targetDate = new Date(new Date().getTime() + targetTime).getTime();
 
             this.isTimerActive = true;
+            this.isTimerPassive = false;
             this.timer = setInterval(() => {
                 const now = new Date().getTime();
                 
@@ -62,11 +67,16 @@ export default {
         },
 
         resetTimer () {
+            if (this.isTimerPassive) {
+                return;
+            }
+
             console.log('RESET');
 
             this.time = '25:00';
             this.isTimerActive = false;
-            
+            this.isTimerPassive = true;
+
             clearInterval(this.timer);
         },
 
