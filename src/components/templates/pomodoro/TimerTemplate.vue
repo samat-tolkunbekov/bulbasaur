@@ -2,9 +2,9 @@
     <div class="pomodoro-timer-template">
         <h3>{{ title }}</h3>
         <div class="container">
-            <button @click="startTimer">{{ start }}</button>
+            <button @click="startTime">{{ start }}</button>
             <p>{{ time }}</p>
-            <button @click="resetTimer">{{ reset }}</button>
+            <button @click="resetTime">{{ reset }}</button>
         </div>
     </div>
 </template>
@@ -32,16 +32,25 @@ export default {
         this.distance = 0;
     },
     methods: {
-        startTimer () {
-            if (this.isTimerActive) {
+        startTime () {
+            if (this.isTimerActive && this.start !== 'Pause') {
+                return;
+            }
+
+            if (this.start === 'Pause') {
+                this.start = 'Continue';
+
+                clearInterval(this.timer);
+                
                 return;
             }
 
             console.log('START');
 
-            const targetTime = 25 * 60 * 1000 + 1000;
+            const targetTime = 1 * 60 * 1000 + 1000;
             const targetDate = new Date(new Date().getTime() + targetTime).getTime();
 
+            this.start = 'Pause';
             this.isTimerActive = true;
             this.isTimerPassive = false;
             this.timer = setInterval(() => {
@@ -53,20 +62,22 @@ export default {
                 const seconds = Math.floor((this.distance % (1000 * 60)) / 1000);
 
                 if (this.distance < 1000) {
-                    this.storeTimer();
-                    this.resetTimer();
+                    this.resetTime();
+                    this.storeTime();
+
+                    return;
                 }
 
-                this.updateTimer(minutes, seconds);
+                this.updateTime(minutes, seconds);
             }, 1000);
         },
 
-        updateTimer (minutes, seconds) {
+        updateTime (minutes, seconds) {
             this.time = (minutes < 10 ? '0' + minutes : minutes) +
                     ':' + (seconds < 10 ? '0' + seconds : seconds);
         },
 
-        resetTimer () {
+        resetTime () {
             if (this.isTimerPassive) {
                 return;
             }
@@ -74,13 +85,14 @@ export default {
             console.log('RESET');
 
             this.time = '25:00';
+            this.start = 'Start';
             this.isTimerActive = false;
             this.isTimerPassive = true;
 
             clearInterval(this.timer);
         },
 
-        storeTimer() {
+        storeTime() {
             const exact_date = new Date().toISOString();
             const data = {
                 exact_date,
@@ -90,7 +102,7 @@ export default {
 
             console.log('STORE');
             console.log(data);
-        },
+        }
     }
 }
 </script>
