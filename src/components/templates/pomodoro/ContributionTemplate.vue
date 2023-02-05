@@ -5,12 +5,12 @@
 </template>
 
 <script>
-export default {
-    name: 'ContributionTemplate',
-    props: {
-        count: Number
+    export default {
+        name: 'ContributionTemplate',
+        props: {
+            count: Number
+        }
     }
-}
 </script>
 
 <style></style>

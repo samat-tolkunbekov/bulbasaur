@@ -1,6 +1,3 @@
-/**
- * @class TimeEnums
- */
 class TimeEnums {
     constructor () {
         this.MINUTES = 60;
