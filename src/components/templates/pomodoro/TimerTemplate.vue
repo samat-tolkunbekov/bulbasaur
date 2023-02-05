@@ -105,37 +105,38 @@
 </script>
 
 <style scoped>
-    .pomodoro-timer-template {
-        border-radius: 5px;
-        margin: 40px 0;
-    }
-
     .container {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 80%;
         margin: auto;
         border: 1px solid #21262d;
         border-radius: 5px;
+        padding: 0 20px;
+        background-color: #161b22;
     }
 
     button {
         color: #0d1117;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 600;
         padding: 10px 15px;
         border-radius: 5px;
         border: none;
         background-color: #42b983;
+        width: 120px;
+    }
+
+    h3 {
+        margin: 0 0 15px 0;
+        padding: 0;
     }
 
     .pomodoro-timer {
-        font-size: 70px;
+        font-size: 55px;
         font-weight: 600;
-        padding: 10px 20px;
+        padding: 10px 15px;
         margin: 0 20px;
-        background-color: #252f3e;
-        border-radius: 10px;
+        background-color: #161b22;
     }
 </style>

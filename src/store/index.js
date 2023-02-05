@@ -10,7 +10,7 @@ export default createStore({
               label: 'Data One',
               backgroundColor: '#f87979',
               data: [40, 20, 12]
-            }
+            },
           ]
         },
         chartOptions: {

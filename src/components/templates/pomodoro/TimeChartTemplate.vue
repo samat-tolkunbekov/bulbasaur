@@ -1,6 +1,6 @@
 <template>
-    <div class="pomodoro-chart-template">
-        <h3>Contributions chart</h3>
+    <div class="pomodoro-time-chart-template">
+        <h3>Time contributions chart</h3>
         <Bar
             id="my-chart-id"
             :options="getChartOptions"
@@ -38,10 +38,10 @@
 </script>
 
 <style>
-    .pomodoro-chart-template {
+    .pomodoro-time-chart-template {
         flex: 5;
         border: 1px solid #21262d;
         border-radius: 5px;
-        margin: 0 10px 0 0;
+        margin: 0 0 0 10px;
     }
 </style>

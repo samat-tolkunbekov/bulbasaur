@@ -39,9 +39,9 @@
 
 <style>
     .pomodoro-contribution-template {
-        padding: 0 20px;
         border: 1px solid #21262d;
         border-radius: 5px;
+        padding: 20px 50px;
     }
 
     .pomodoro-contribution-template text {
