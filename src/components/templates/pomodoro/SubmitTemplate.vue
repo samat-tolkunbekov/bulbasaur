@@ -67,4 +67,8 @@
         background-color: #42b983;
         width: 100%;
     }
+
+    input[type="Submit"][data-v-b41d92fc]:hover {
+        background-color: #419770;
+    }
 </style>

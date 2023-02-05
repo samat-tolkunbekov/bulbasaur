@@ -1,16 +1,17 @@
 <template>
     <div class="pomodoro-timer-template">
         <h3>{{ title }}</h3>
-        <div class="container">
-            <button @click="startTime">{{ start }}</button>
-            <p class="pomodoro-timer">{{ time }}</p>
-            <button @click="resetTime">{{ reset }}</button>
+        <div :class="[isTimerActive ? 'container active' : 'container']">
+            <button :class="[isTimerActive ? 'active' : '']" @click="startTime">{{ start }}</button>
+            <p :class="[isTimerActive ? 'pomodoro-timer active' : 'pomodoro-timer']">{{ time }}</p>
+            <button :class="[isTimerActive ? 'active' : '']" @click="resetTime">{{ reset }}</button>
         </div>
     </div>
 </template>
 
 <script>
     import FormEnums from '@/enums/pomodoro/FormEnums';
+    import TimeEnums from '@/enums/pomodoro/TimeEnums';
 
     export default {
         name: 'TimerTemplate',
@@ -22,43 +23,39 @@
                 pause: FormEnums.BUTTONS.PAUSE,
                 continue: FormEnums.BUTTONS.CONTINUE,
                 time: FormEnums.TIMER.TIME,
-                distance: FormEnums.TIMER.DISTANCE,
                 timer: null,
-                isTimerActive: null,
-                isTimerPassive: null
+                target: 0,
+                isTimerActive: null
             }
         },
         methods: {
             startTime () {
-                if (this.isTimerActive && this.start !== 'Pause') {
+                if (this.isTimerClicked()) {
+                    console.log('TIMER-RETURNED');
+
                     return;
                 }
 
-                if (this.start === 'Pause') {
-                    this.start = 'Continue';
+                if (this.isTimerPaused()) {
+                    this.start = FormEnums.BUTTONS.CONTINUE;
 
                     clearInterval(this.timer);
+
+                    console.log('TIMER-PAUSE');
                     
                     return;
                 }
 
-                console.log('START');
+                this.setTime();
 
-                const targetTime = 1 * 60 * 1000 + 1000;
-                const targetDate = new Date(new Date().getTime() + targetTime).getTime();
-
-                this.start = 'Pause';
-                this.isTimerActive = true;
-                this.isTimerPassive = false;
                 this.timer = setInterval(() => {
                     const now = new Date().getTime();
+                    const distance = this.target - now;
                     
-                    this.distance = targetDate - now;
-                    
-                    const minutes = Math.floor((this.distance % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((this.distance % (1000 * 60)) / 1000);
+                    const minutes = Math.floor((distance % (TimeEnums.ONE_HOUR)) / (TimeEnums.ONE_MINUTE));
+                    const seconds = Math.floor((distance % (TimeEnums.ONE_MINUTE)) / TimeEnums.ONE_SECOND);
 
-                    if (this.distance < 1000) {
+                    if (distance < TimeEnums.ONE_SECOND) {
                         this.resetTime();
                         this.storeTime();
 
@@ -69,22 +66,69 @@
                 }, 1000);
             },
 
+            isTimerClicked () {
+                return this.isTimerActive
+                    && this.start !== FormEnums.BUTTONS.PAUSE
+                    && this.start !== FormEnums.BUTTONS.CONTINUE;
+            },
+
+            isTimerPaused () {
+                return this.start === FormEnums.BUTTONS.PAUSE && this.time !== FormEnums.TIMER.TIME;
+            },
+
+            isTimerContinued () {
+                return this.start === FormEnums.BUTTONS.CONTINUE && this.time !== FormEnums.TIMER.TIME;
+            },
+
+            isTimerPassive () {
+                return this.start === FormEnums.BUTTONS.START;
+            },
+
+            isTimeExpired () {
+                const remainedTime = JSON.parse(localStorage.getItem('pomodoro-remained-time') ?? 0);
+                const now = new Date().getTime();
+
+                return (remainedTime - now) < TimeEnums.ONE_SECOND;
+            },
+
+            setTime () {
+                const remainedTargetInMinutes = this.getRemainedTime();
+                const timerTargetInMinutes = TimeEnums.TIMER * TimeEnums.ONE_MINUTE + TimeEnums.ONE_SECOND;
+                const targetTime = this.isTimerContinued() ? remainedTargetInMinutes : timerTargetInMinutes;
+
+                this.target = new Date(new Date().getTime() + targetTime).getTime();
+                this.start = FormEnums.BUTTONS.PAUSE;
+                this.isTimerActive = true;
+
+                this.setTimeStorage(this.target);
+            },
+
+            setTimeStorage (value) {
+                localStorage.setItem('pomodoro-remained-time', value);
+            },
+
+            getRemainedTime () {
+                const remianedTimeInMinutes = this.time.split(':');
+                
+                return remianedTimeInMinutes[0] * TimeEnums.ONE_MINUTE + 
+                    TimeEnums.ONE_SECOND + (remianedTimeInMinutes[1] * TimeEnums.ONE_SECOND);
+            },
+
             updateTime (minutes, seconds) {
                 this.time = (minutes < 10 ? '0' + minutes : minutes) +
                         ':' + (seconds < 10 ? '0' + seconds : seconds);
             },
 
             resetTime () {
-                if (this.isTimerPassive) {
+                if (this.isTimerPassive()) {
                     return;
                 }
 
-                console.log('RESET');
+                console.log('TIMER-RESET');
 
-                this.time = '25:00';
-                this.start = 'Start';
+                this.time = FormEnums.TIMER.TIME;
+                this.start = FormEnums.BUTTONS.START;
                 this.isTimerActive = false;
-                this.isTimerPassive = true;
 
                 clearInterval(this.timer);
             },
@@ -97,7 +141,7 @@
                     count: 1
                 };
 
-                console.log('STORE');
+                console.log('TIMER-STORE');
                 console.log(data);
             }
         }
@@ -116,6 +160,22 @@
         background-color: #161b22;
     }
 
+    .container.active, .pomodoro-timer.active {
+        /* background-color: #c9d1d9; */
+        background-color: #42b983;
+        color: #21262d;
+    }
+
+    .container.active.paused, .pomodoro-timer.active.paused {
+        background-color: #f1e05a;
+        color: #21262d;
+    }
+
+    button.active {
+        background-color: #21262d;
+        color: #c9d1d9;   
+    }
+
     button {
         color: #0d1117;
         font-size: 14px;
@@ -125,6 +185,14 @@
         border: none;
         background-color: #42b983;
         width: 120px;
+    }
+
+    button:hover {
+        background-color: #419770;
+    }
+
+    button.active:hover {
+        background-color: #414853;
     }
 
     h3 {
