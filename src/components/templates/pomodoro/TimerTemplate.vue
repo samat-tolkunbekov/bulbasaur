@@ -10,26 +10,23 @@
 </template>
 
 <script>
+    import FormEnums from '@/enums/pomodoro/FormEnums';
+
     export default {
         name: 'TimerTemplate',
         data () {
             return {
-                title: '',
-                start: '',
-                reset: '',
-                time: 0,
-                distance: 0,
+                title: FormEnums.TIMER.TITLE,
+                start: FormEnums.BUTTONS.START,
+                reset: FormEnums.BUTTONS.RESET,
+                pause: FormEnums.BUTTONS.PAUSE,
+                continue: FormEnums.BUTTONS.CONTINUE,
+                time: FormEnums.TIMER.TIME,
+                distance: FormEnums.TIMER.DISTANCE,
                 timer: null,
                 isTimerActive: null,
                 isTimerPassive: null
             }
-        },
-        created () {
-            this.title = 'Start your timer';
-            this.start = 'Start';
-            this.reset = 'Reset';
-            this.time = '25:00';
-            this.distance = 0;
         },
         methods: {
             startTime () {

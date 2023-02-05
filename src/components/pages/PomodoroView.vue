@@ -8,6 +8,7 @@
                 @reset-timer="resetTimer"
             />
             <ContributionTemplate :count="count" />
+            <ChartTemplate />
         </div>
     </div>
 </template>
@@ -16,13 +17,15 @@
     import TimerTemplate from '../templates/pomodoro/TimerTemplate.vue';
     import SubmitTemplate from '../templates/pomodoro/SubmitTemplate.vue';
     import ContributionTemplate from '../templates/pomodoro/ContributionTemplate.vue';
+    import ChartTemplate from '../templates/pomodoro/ChartTemplate.vue';
 
     export default {
         name: 'PomodoroView',
         components: {
             TimerTemplate,
             SubmitTemplate,
-            ContributionTemplate
+            ContributionTemplate,
+            ChartTemplate
         },
         data () {
             return {

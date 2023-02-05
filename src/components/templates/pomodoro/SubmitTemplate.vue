@@ -1,12 +1,12 @@
 <template>
     <div class="pomodoro-submit-template">
         <div class="pomodoro-submit-template-header">
-            <h2>{{ name }}, submit your work</h2>
+            <h2>{{ name }}{{ header }}</h2>
             <button :class="[isActive ? 'button-active' : '']" @click="displayInput">{{ button }}</button>
         </div>
         <form @submit="submitInput" :class="[isActive ? active : input]">
-            <p>Enter work date and time</p>
-            <input type="datetime-local" placeholder="Choose date" />
+            <p>{{ title }}</p>
+            <input type="datetime-local" v-model="date" :placeholder="placeholder" />
             <input type="submit" :placeholder="save" :value="save">
         </form>
     </div>
@@ -22,29 +22,34 @@
         },
         data () {
             return {
+                date: '',
                 isActive: false,
                 input: 'pomodoro-submit-form',
                 active: 'pomodoro-submit-form-active',
-                button: FormEnums.SUBMIT_BUTTONS.SUBMIT,
-                save: FormEnums.SUBMIT_BUTTONS.SAVE
+                header: FormEnums.TEXT.SUBMIT_HEADER,
+                placeholder: FormEnums.TEXT.SUBMIT_INPUT_PLACEHOLDER,
+                title: FormEnums.TEXT.SUBMIT_TITLE,
+                button: FormEnums.BUTTONS.SUBMIT,
+                save: FormEnums.BUTTONS.SAVE
             }
         },
         methods: {
             displayInput () {
-                this.button = this.button === FormEnums.SUBMIT_BUTTONS.CANCEL
-                    ? FormEnums.SUBMIT_BUTTONS.SUBMIT
-                    : FormEnums.SUBMIT_BUTTONS.CANCEL;
+                this.button = this.button === FormEnums.BUTTONS.CANCEL
+                    ? FormEnums.BUTTONS.SUBMIT
+                    : FormEnums.BUTTONS.CANCEL;
                 this.isActive = !this.isActive;
 
-                console.log(this.button === FormEnums.SUBMIT_BUTTONS.CANCEL ? 'SUBMIT-DISPLAY' : 'SUBMIT-CANCEL');
+                console.log(this.button === FormEnums.BUTTONS.CANCEL ? 'SUBMIT-DISPLAY' : 'SUBMIT-CANCEL');
             },
 
             submitInput (event) {
                 event.preventDefault();
 
-                this.button = FormEnums.SUBMIT_BUTTONS.SUBMIT;
+                this.button = FormEnums.BUTTONS.SUBMIT;
                 this.isActive = false;
 
+                console.log(this.date);
                 console.log('SUBMIT-INPUT');
             }
         }
