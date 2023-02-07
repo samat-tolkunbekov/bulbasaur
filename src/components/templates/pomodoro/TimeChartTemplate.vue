@@ -4,7 +4,7 @@
         <Bar
             id="my-chart-id"
             :options="getChartOptions"
-            :data="getChartData"
+            :data="getChartDailyData"
             :style="myStyles"
         />
     </div>
@@ -13,7 +13,7 @@
 <script>
     import { Bar } from 'vue-chartjs';
     import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
-    import { mapGetters } from 'vuex';
+    import { mapActions, mapGetters } from 'vuex';
 
     ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
@@ -24,8 +24,8 @@
         },
         computed: {
             ...mapGetters([
-                'getChartData',
                 'getChartOptions',
+                'getChartDailyData',
             ]),
 
             myStyles () {
@@ -33,6 +33,12 @@
                     color: 'red'
                 }
             }
+        },
+        methods: {
+            ...mapActions(['fetchContributions'])
+        },
+        created () {
+            this.fetchContributions();
         }
     }
 </script>

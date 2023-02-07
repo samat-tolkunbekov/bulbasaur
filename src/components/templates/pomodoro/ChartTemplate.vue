@@ -1,6 +1,6 @@
 <template>
     <div class="pomodoro-chart-template">
-        <h3>Contributions chart</h3>
+        <h3>Completed Daily Pomodoro Count</h3>
         <Bar
             id="my-chart-id"
             :options="getChartOptions"
@@ -13,7 +13,7 @@
 <script>
     import { Bar } from 'vue-chartjs';
     import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
-    import { mapGetters } from 'vuex';
+    import { mapActions, mapGetters } from 'vuex';
 
     ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
@@ -33,6 +33,12 @@
                     color: 'red'
                 }
             }
+        },
+        methods: {
+            ...mapActions(['fetchChartData'])
+        },
+        created () {
+            this.fetchChartData();
         }
     }
 </script>
