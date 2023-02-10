@@ -15,7 +15,7 @@
 
 <script>
     import { CalendarHeatmap } from 'vue3-calendar-heatmap';
-    import { mapGetters } from 'vuex';
+    import { mapActions, mapGetters } from 'vuex';
     import ContributionEnums from '@/enums/pomodoro/ContributionEnums'; 
 
     export default {
@@ -33,6 +33,12 @@
         },
         computed: {
             ...mapGetters(['getContributions'])
+        },
+        methods: {
+            ...mapActions(['fetchContributions'])
+        },
+        created () {
+            this.fetchContributions();
         }
     }
 </script>

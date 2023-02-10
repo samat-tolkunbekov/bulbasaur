@@ -55,6 +55,9 @@
                     const minutes = Math.floor((distance % (TimeEnums.ONE_HOUR)) / (TimeEnums.ONE_MINUTE));
                     const seconds = Math.floor((distance % (TimeEnums.ONE_MINUTE)) / TimeEnums.ONE_SECOND);
 
+                    console.log('TIMER TIK TOK');
+                    console.log(distance);
+
                     if (distance < TimeEnums.ONE_SECOND) {
                         this.resetTime();
                         this.storeTime();
@@ -81,7 +84,7 @@
             },
 
             isTimerPassive () {
-                return this.start === FormEnums.BUTTONS.START;
+                return this.start === FormEnums.BUTTONS.START && this.time === FormEnums.TIMER.TIME;
             },
 
             isTimeExpired () {
